@@ -1,0 +1,8 @@
+---
+- hosts: frontend
+  become: True
+  become_user: root
+
+  roles: 
+    - role-install-nginx
+    - role-install-mysql-client

@@ -1,0 +1,8 @@
+---
+- hosts: bastion
+  become: True
+  become_user: root
+  
+  roles: 
+    - role-install-docker
+    - role-jenkins-docker
