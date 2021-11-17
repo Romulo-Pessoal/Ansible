@@ -1,0 +1,65 @@
+---
+- name: Update the apt package index
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Install NGINX From Apt-Get
+  become: yes
+  apt:
+    name: nginx
+    state: present
+
+- name: Delete NGINX index.html
+  become: yes
+  command:
+    cmd: rm /var/www/html/index.html
+
+- name: Create NGINX http File For Frontend
+  become: yes
+  file:
+    path: /var/www/html/index.html
+    state: touch
+
+- name: Amend NGINX index.html File
+  become: yes
+  blockinfile:
+      path: /var/www/html/index.html
+      marker: ""
+      block: |
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="#">
+        <title>Front</title>
+        </head>
+        <body>
+        <h1>Front End</h1>
+        <div id="res"></div>
+        </body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+        <script>
+         axios.get('http://internal-backend-lb-tf-825085948.us-east-1.elb.amazonaws.com:8080/')
+          .then(res => showOutput(res))
+          .catch(error => console.log(error))
+          function showOutput(res) {
+          document.getElementById('res').innerHTML = `
+          <div>
+          <h2>${res.data}</h2>
+          </div>
+         `;
+         }
+        </script>
+        </html>
+        
+- name: Make Sure NGINX Service Is Running
+  become: yes
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes

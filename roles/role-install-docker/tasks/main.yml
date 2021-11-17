@@ -1,0 +1,40 @@
+---
+- name: Update the apt package index
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: aggiungi chiave GPG
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: aggiungi repository docker
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: actually install docker
+  apt:
+    name: "docker-ce"
+    state: latest
+
+- name: actually install docker compose
+  apt:
+    name: "docker-compose"
+    state: latest
+   
+- name: Install openjdk-11-jdk From Apt-Get
+  become: yes
+  apt:
+    name:  openjdk-11-jdk
+    state: present
+
+- name: Install git From Apt-Get
+  become: yes
+  apt:
+    name:  git
+    state: present    

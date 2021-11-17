@@ -1,0 +1,45 @@
+---
+- name: Update the apt package index
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    
+- name: aggiungi chiave GPG
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key 
+    state: present
+
+- name: aggiungi repository jenkins
+  apt_repository:
+    repo: deb https://pkg.jenkins.io/debian-stable binary/
+    state: present
+
+- name: Install Jenkins From Apt-Get
+  become: yes
+  apt:
+    name: jenkins
+    state: present
+
+- name: Install openjdk-11-jdk From Apt-Get
+  become: yes
+  apt:
+    name:  openjdk-11-jdk
+    state: present
+
+- name: Install git From Apt-Get
+  become: yes
+  apt:
+    name:  git
+    state: present
+
+- name: Restart Jenkins
+  become: yes
+  command:
+    cmd: systemctl start jenkins
+
+- name: Enable Restart Jenkins
+  become: yes
+  command:
+    cmd: systemctl enable jenkins

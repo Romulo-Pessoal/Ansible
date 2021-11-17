@@ -1,0 +1,15 @@
+---
+- name: Update the apt package index
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Install mysql-client From Apt-Get
+  become: yes
+  apt:
+    name: mysql-client
+    state: present
+
